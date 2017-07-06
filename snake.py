@@ -3,13 +3,19 @@ import random
 
 class Snake(tk.Frame):
     def __init__(self, parent):
-        tk.Frame.__init__(self, parent, bg='black', width=500, height=400)
-        self.canvas = tk.Canvas(self, bg='black', width=500, height=400)
+
+        self.width = 40
+        self.height = 20
+        self.linkHW = 30
+
+        self.screenWidth = self.width * self.linkHW
+        self.screenHeight = self.height * self.linkHW
+
+        tk.Frame.__init__(self, parent, bg='black', width=self.screenWidth, height=self.screenHeight)
+        self.canvas = tk.Canvas(self, bg='black', width=self.screenWidth, height=self.screenHeight)
         self.canvas.grid(row = 0, column = 0)
         self.parent = parent
-        self.width = 25
-        self.height = 20
-        self.linkHW = 20
+
         self.reset()
 
     def reset(self):
@@ -29,9 +35,9 @@ class Snake(tk.Frame):
     def step(self):
         if self.isApple():
             self.snake.insert(0, self.nextStep())
-            self.apple = [random.randint(0, self.width), random.randint(0, self.height)]
+            self.apple = [random.randint(0, self.width - 1), random.randint(0, self.height - 1)]
             while self.apple in self.snake + [self.nextStep()]:
-                self.apple = [random.randint(0, self.width), random.randint(0, self.height)]
+                self.apple = [random.randint(0, self.width - 1), random.randint(0, self.height - 1)]
         else:
             self.updateSnake()
         self.draw()
@@ -70,7 +76,7 @@ class Snake(tk.Frame):
 
         cell = self.snake[0]
 
-        if cell[0] < 0 or cell[0] > 24 or cell[1] < 0 or cell[1] > 19:
+        if cell[0] < 0 or cell[0] >= self.width or cell[1] < 0 or cell[1] >= self.height:
             return True
 
         return False
@@ -79,18 +85,18 @@ class Snake(tk.Frame):
         self.textOcc = not self.textOcc
         self.canvas.delete("all")
         if self.textOcc:
-            self.canvas.create_text(500 // 2, 400 // 2, text='Game Over', fill='red', font=("Purisa", 70))
+            self.canvas.create_text(self.screenWidth // 2, self.screenHeight // 2, text='Game Over', fill='red', font=("Purisa", 70))
 
     def pause(self):
         self.textOcc = not self.textOcc
         self.canvas.delete("all")
         self.draw()
         if self.textOcc:
-            self.canvas.create_text(500 // 2, 400 // 2, text='Pause', fill='yellow', font=("Purisa", 70))
+            self.canvas.create_text(self.screenWidth // 2, self.screenHeight // 2, text='Pause', fill='yellow', font=("Purisa", 70))
 
     def winning(self):
         self.textOcc = not self.textOcc
         self.canvas.delete("all")
         self.draw()
         if self.textOcc:
-            self.canvas.create_text(500 // 2, 400 // 2, text='You Win !!!', fill='yellow', font=("Purisa", 70))
+            self.canvas.create_text(self.screenWidth // 2, self.screenHeight // 2, text='You Win !!!', fill='yellow', font=("Purisa", 70))

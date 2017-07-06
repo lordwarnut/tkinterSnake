@@ -3,7 +3,7 @@ import time
 import snake
 
 root = tk.Tk()
-state = 'w'
+state = 's'
 oldState = 'r'
 
 sCanv = snake.Snake(root)
