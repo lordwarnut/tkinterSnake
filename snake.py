@@ -7,7 +7,9 @@ class Snake(tk.Frame):
         self.canvas = tk.Canvas(self, bg='black', width=500, height=400)
         self.canvas.grid(row = 0, column = 0)
         self.parent = parent
-
+        self.width = 25
+        self.height = 20
+        self.linkHW = 20
         self.reset()
 
     def reset(self):
@@ -27,21 +29,30 @@ class Snake(tk.Frame):
     def step(self):
         if self.isApple():
             self.snake.insert(0, self.nextStep())
-            self.apple = [random.randint(0,24), random.randint(0,19)]
+            self.apple = [random.randint(0, self.width), random.randint(0, self.height)]
             while self.apple in self.snake + [self.nextStep()]:
-                self.apple = [random.randint(0, 24), random.randint(0, 19)]
+                self.apple = [random.randint(0, self.width), random.randint(0, self.height)]
         else:
             self.updateSnake()
         self.draw()
 
+    def getCellCoords(self, x, y):
+        return (x * self.linkHW,
+                y * self.linkHW,
+                x * self.linkHW + self.linkHW,
+                y * self.linkHW + self.linkHW)
+
     def draw(self):
         self.canvas.delete("all")
-        self.canvas.create_rectangle(self.snake[0][0] * 20, self.snake[0][1] * 20, self.snake[0][0] * 20 + 20, self.snake[0][1] * 20 + 20, fill='orange')
+        self.canvas.create_rectangle(*self.getCellCoords(self.snake[0][0], self.snake[0][1]), fill='orange')
         for i in range(1, len(self.snake)):
             link = self.snake[i]
-            self.canvas.create_rectangle(link[0] * 20, link[1] * 20, link[0] * 20 + 20, link[1] * 20 + 20, fill='green')
-            self.canvas.create_oval(link[0] * 20 + 5, link[1] * 20 + 5, link[0] * 20 + 15, link[1] * 20 + 15, fill='blue')
-        self.canvas.create_rectangle(self.apple[0] * 20 , self.apple[1] * 20, self.apple[0] * 20 + 20, self.apple[1] * 20 + 20, fill='red')
+            self.canvas.create_rectangle(*self.getCellCoords(link[0], link[1]), fill='green')
+            self.canvas.create_oval(link[0] * self.linkHW + self.linkHW * 0.25,
+                                    link[1] * self.linkHW + self.linkHW * 0.25,
+                                    link[0] * self.linkHW + self.linkHW * 0.75,
+                                    link[1] * self.linkHW + self.linkHW * 0.75, fill='blue')
+        self.canvas.create_rectangle(*self.getCellCoords(self.apple[0], self.apple[1]), fill='red')
 
     def updateSnake(self):
         _snake = [list(self.snake[0])]
