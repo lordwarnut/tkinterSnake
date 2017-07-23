@@ -4,9 +4,9 @@ import random
 class Snake(tk.Frame):
     def __init__(self, parent):
 
-        self.width = 40
-        self.height = 20
-        self.linkHW = 30
+        self.width = 10
+        self.height = 10
+        self.linkHW = 50
 
         self.screenWidth = self.width * self.linkHW
         self.screenHeight = self.height * self.linkHW
@@ -20,7 +20,7 @@ class Snake(tk.Frame):
 
     def reset(self):
         self.snake = [[1, 0]]
-        self.apple = [1, 4]
+        self.apple = [1, 2]
         self.dxdy = [0, 1]
         self.textOcc = False
 
@@ -35,9 +35,10 @@ class Snake(tk.Frame):
     def step(self):
         if self.isApple():
             self.snake.insert(0, self.nextStep())
-            self.apple = [random.randint(0, self.width - 1), random.randint(0, self.height - 1)]
-            while self.apple in self.snake + [self.nextStep()]:
+            if len(self.snake) < self.width * self.height:
                 self.apple = [random.randint(0, self.width - 1), random.randint(0, self.height - 1)]
+                while self.apple in self.snake + [self.nextStep()]:
+                    self.apple = [random.randint(0, self.width - 1), random.randint(0, self.height - 1)]
         else:
             self.updateSnake()
         self.draw()
@@ -59,6 +60,7 @@ class Snake(tk.Frame):
                                     link[0] * self.linkHW + self.linkHW * 0.75,
                                     link[1] * self.linkHW + self.linkHW * 0.75, fill='blue')
         self.canvas.create_rectangle(*self.getCellCoords(self.apple[0], self.apple[1]), fill='red')
+        self.canvas.create_text(0, 0, anchor=tk.NW, text=f'Score : {len(self.snake)}', fill='pink', font=("Purisa", 10))
 
     def updateSnake(self):
         _snake = [list(self.snake[0])]
