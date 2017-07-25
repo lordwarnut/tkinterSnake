@@ -15,7 +15,8 @@ def setSpeed():
     speed = float(speedSelect.get())
 
 def start(*args):
-    global state
+    global state, resetButton
+    resetButton.configure(text='Reset')
     sCanv.reset()
     state = 'r'
     print(state)
@@ -24,11 +25,13 @@ def punp(*args):
     global state, oldState
     if state == 'p':
         state = oldState
+        pauseButton.configure(text='Pause')
     else:
         oldState = state
         state = 'p'
+        pauseButton.configure(text='Un-pause')
 
-resetButton = tk.Button(root, text = 'Reset', command = start)
+resetButton = tk.Button(root, text = 'Start', command = start)
 resetButton.grid(column=0, row=1, sticky=tk.W + tk.E)
 
 pauseButton = tk.Button(root, text = 'Pause', command = punp)

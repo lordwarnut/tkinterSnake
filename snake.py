@@ -4,9 +4,9 @@ import random
 class Snake(tk.Frame):
     def __init__(self, parent):
 
-        self.width = 10
-        self.height = 10
-        self.linkHW = 50
+        self.width = 4
+        self.height = 4
+        self.linkHW = 150
 
         self.screenWidth = self.width * self.linkHW
         self.screenHeight = self.height * self.linkHW
@@ -63,14 +63,14 @@ class Snake(tk.Frame):
         self.canvas.create_text(0, 0, anchor=tk.NW, text=f'Score : {len(self.snake)}', fill='pink', font=("Purisa", 10))
 
     def updateSnake(self):
-        _snake = [list(self.snake[0])]
+        snakeBuffer = [list(self.snake[0])]
         for i in range(len(self.snake) - 1):
-            _snake.append(list(self.snake[i]))
+            snakeBuffer.append(list(self.snake[i]))
 
-        _snake[0][0] += self.dxdy[0]
-        _snake[0][1] += self.dxdy[1]
+        snakeBuffer[0][0] += self.dxdy[0]
+        snakeBuffer[0][1] += self.dxdy[1]
 
-        self.snake = _snake
+        self.snake = snakeBuffer
 
     def isOver(self):
         if self.snake[0] in self.snake[1:]:
@@ -92,7 +92,7 @@ class Snake(tk.Frame):
     def pause(self):
         self.textOcc = not self.textOcc
         self.canvas.delete("all")
-        self.draw()
+        #self.draw()
         if self.textOcc:
             self.canvas.create_text(self.screenWidth // 2, self.screenHeight // 2, text='Pause', fill='yellow', font=("Purisa", 70))
 
